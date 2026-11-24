@@ -4,10 +4,11 @@ cd /opt/drupal
 mkdir -p web/sites/default/files
 if [ ! -f web/sites/default/files/site.sqlite ]; then
   password="$(php -r 'echo bin2hex(random_bytes(24));')"
-  vendor/bin/drush site:install standard --db-url=sqlite:///opt/drupal/web/sites/default/files/site.sqlite --site-name='NIASPO Drupal' --account-name=student --account-pass="$password" --yes --quiet
-  vendor/bin/drush php:eval '$n=\Drupal\node\Entity\Node::create(["type"=>"page","title"=>"Drupal в Docker — практика 3.3","body"=>["value"=>"<p>Кузнецов Максим Дмитриевич, ИКБО-15-25.</p><p>Эта страница создана как материал Drupal и хранится в базе SQLite. Это работающая CMS.</p>","format"=>"basic_html"],"status"=>1]);$n->save();\Drupal::configFactory()->getEditable("system.site")->set("page.front","/node/".$n->id())->save();' --quiet
+  vendor/bin/drush site:install standard --db-url=sqlite://localhost//opt/drupal/web/sites/default/files/site.sqlite --site-name='NIASPO Drupal' --account-name=student --account-pass="$password" --yes --quiet
+  vendor/bin/drush php:eval '$type=\Drupal\node\Entity\NodeType::create(["type"=>"page","name"=>"Basic page"]);$type->save();\Drupal\field\Entity\FieldStorageConfig::create(["field_name"=>"body","entity_type"=>"node","type"=>"text_with_summary"])->save();\Drupal\field\Entity\FieldConfig::create(["field_name"=>"body","entity_type"=>"node","bundle"=>"page","label"=>"Body"])->save();\Drupal\Core\Entity\Entity\EntityViewDisplay::create(["targetEntityType"=>"node","bundle"=>"page","mode"=>"default","status"=>1])->setComponent("body",["type"=>"text_default","label"=>"hidden"])->save();$n=\Drupal\node\Entity\Node::create(["type"=>"page","title"=>"Drupal в Docker — практика 3.3","body"=>["value"=>"<p>Кузнецов Максим Дмитриевич, ИКБО-15-25.</p><p>Эта страница создана как материал Drupal и хранится в базе SQLite. Это работающая CMS.</p>","format"=>"basic_html"],"status"=>1]);$n->save();\Drupal::configFactory()->getEditable("system.site")->set("page.front","/node/".$n->id())->save();' --quiet
 fi
 chown -R www-data:www-data web/sites/default
 sed -i "s/^Listen 80$/Listen ${PORT:-10000}/" /etc/apache2/ports.conf
 sed -i "s/:80>/:${PORT:-10000}>/" /etc/apache2/sites-available/000-default.conf
 exec apache2-foreground
+
