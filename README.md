@@ -1,2 +1,4 @@
-# niaspo-pr3
-NIASPO practice 3: Docker Compose services and cloud deployments
+# NIASPO Practice 3
+
+Educational Docker services. Cloud build contexts are in `3.3/docker_*`.
+No credentials from existing servers are included.

@@ -1,0 +1,22 @@
+name: niaspo-pr33
+services:
+  nodejs:
+    build: ./docker_nodejs
+    ports: ["127.0.0.1:18901:10000"]
+    mem_limit: 128m
+  maven:
+    build: ./docker_maven
+    ports: ["127.0.0.1:18902:10000"]
+    mem_limit: 256m
+  jenkins:
+    build: ./docker_jenkins
+    ports: ["127.0.0.1:18903:10000"]
+    mem_limit: 512m
+  drupal:
+    build: ./docker_drupal
+    ports: ["127.0.0.1:18904:10000"]
+    mem_limit: 512m
+  couchbase:
+    build: ./docker_couchbase
+    ports: ["127.0.0.1:18905:10000"]
+    mem_limit: 512m
